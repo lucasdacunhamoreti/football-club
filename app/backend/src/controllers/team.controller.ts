@@ -9,13 +9,9 @@ export default class TeamController {
     this.teamService = new TeamService();
   }
 
-  public getAllTeams = async (_req: Request, res: Response, next: NextFunction) => {
-    try {
-      const result = await this.teamService.getAllTeams();
-      return res.status(mapError('ok')).json(result);
-    } catch (error) {
-      next(error);
-    }
+  public getAllTeams = async (_req: Request, res: Response) => {
+    const result = await this.teamService.getAllTeams();
+    return res.status(mapError('ok')).json(result);
   };
 
   public getOneTeam = async (req: Request, res: Response, next: NextFunction) => {
