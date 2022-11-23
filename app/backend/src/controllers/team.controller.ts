@@ -17,4 +17,14 @@ export default class TeamController {
       next(error);
     }
   };
+
+  public getOneTeam = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const result = await this.teamService.getOneTeam(+id);
+      return res.status(mapError('ok')).json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
 }

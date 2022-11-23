@@ -12,4 +12,9 @@ export default class TeamModel {
     const result = await this._model.findAll();
     return result;
   }
+
+  public async getOneTeam(id: number): Promise<ITeam | null> {
+    const result = await this._model.findOne({ where: { id } });
+    return result;
+  }
 }
