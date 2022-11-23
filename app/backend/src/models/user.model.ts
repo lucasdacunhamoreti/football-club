@@ -2,14 +2,14 @@ import User from '../database/models/User';
 import { IUser } from '../interfaces/IUser';
 
 export default class UserModel {
-  private model: typeof User;
+  private _model: typeof User;
 
   constructor() {
-    this.model = User;
+    this._model = User;
   }
 
   public async findOne(email: string): Promise<IUser | null> {
-    const result = await this.model.findOne({ where: { email } });
+    const result = await this._model.findOne({ where: { email } });
     return result;
   }
 }

@@ -1,5 +1,4 @@
-import { Request, Response } from 'express';
-import { NextFunction } from 'express-serve-static-core';
+import { Request, Response, NextFunction } from 'express';
 import mapError from '../utils/mapError';
 import { IUserLogin } from '../interfaces/IUser';
 import UserService from '../services/user.service';
