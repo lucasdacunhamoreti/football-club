@@ -39,5 +39,5 @@ class App {
 
 export default App;
 
-// Instância necessária para rodar os testes de integração
+// Instância necessária para rodar os testes de integração.
 export const { app } = new App();
