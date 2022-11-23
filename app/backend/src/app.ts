@@ -1,4 +1,8 @@
 import * as express from 'express';
+import * as cors from 'cors';
+import loginRoute from './routes/login.route';
+import 'express-async-errors';
+import httpErrorMiddleware from './middlewares/http.error.middleware';
 
 class App {
   public app: express.Express;
@@ -19,9 +23,13 @@ class App {
       res.header('Access-Control-Allow-Headers', '*');
       next();
     };
-
+    this.app.use(cors());
     this.app.use(express.json());
     this.app.use(accessControl);
+
+    this.app.use(loginRoute);
+
+    this.app.use(httpErrorMiddleware);
   }
 
   public start(PORT: string | number):void {
