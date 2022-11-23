@@ -2,3 +2,5 @@ express-async-errors
 joi
 cors
 @types/cors
+http-status-codes
+@types/http-status-codes
