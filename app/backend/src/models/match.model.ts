@@ -28,4 +28,25 @@ export default class MatchModel {
     );
     return result;
   }
+
+  public async getAllMatchesByProgress(progress: boolean): Promise<IMatch[] | null> {
+    const result = await this._model.findAll(
+      {
+        include: [
+          {
+            model: TeamsModel,
+            as: 'teamHome',
+            attributes: { exclude: ['id'] },
+          },
+          {
+            model: TeamsModel,
+            as: 'teamAway',
+            attributes: { exclude: ['id'] },
+          },
+        ],
+        where: { inProgress: progress },
+      },
+    );
+    return result;
+  }
 }
