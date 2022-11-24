@@ -1,4 +1,4 @@
-import { IMatch } from '../interfaces/IMatch';
+import { IMatch, INewMatch } from '../interfaces/IMatch';
 import MatchesModel from '../database/models/Match';
 import TeamsModel from '../database/models/Team';
 
@@ -47,6 +47,17 @@ export default class MatchModel {
         where: { inProgress: progress },
       },
     );
+    return result;
+  }
+
+  public async newMatch(body: INewMatch): Promise<IMatch> {
+    const result = await this._model.create({
+      homeTeam: body.homeTeam,
+      awayTeam: body.awayTeam,
+      homeTeamGoals: body.homeTeamGoals,
+      awayTeamGoals: body.awayTeamGoals,
+      inProgress: 1,
+    });
     return result;
   }
 }

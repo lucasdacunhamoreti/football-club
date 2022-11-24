@@ -21,3 +21,10 @@ export interface IMatchComplete {
     teamName: string;
   };
 }
+
+export interface INewMatch {
+  homeTeam: number;
+  awayTeam: number;
+  homeTeamGoals: number;
+  awayTeamGoals: number;
+}

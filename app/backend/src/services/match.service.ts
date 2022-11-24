@@ -1,4 +1,5 @@
 import MatchModel from '../models/match.model';
+import { INewMatch } from '../interfaces/IMatch';
 
 export default class MatchService {
   private matchModel: MatchModel;
@@ -20,5 +21,10 @@ export default class MatchService {
         matches = await this.matchModel.getAllMatches();
     }
     return matches;
+  };
+
+  public newMatch = async (body: INewMatch) => {
+    const matchInserted = await this.matchModel.newMatch(body);
+    return matchInserted;
   };
 }

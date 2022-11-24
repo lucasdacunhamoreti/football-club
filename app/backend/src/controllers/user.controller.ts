@@ -2,12 +2,15 @@ import { Request, Response, NextFunction } from 'express';
 import mapError from '../utils/mapError';
 import { IUserLogin } from '../interfaces/IUser';
 import UserService from '../services/user.service';
+import UserModel from '../models/user.model';
 
 export default class UserController {
   private userService: UserService;
+  private userModel: UserModel;
 
   constructor() {
     this.userService = new UserService();
+    this.userModel = new UserModel();
   }
 
   public login = async (req: Request, res: Response, next: NextFunction) => {
@@ -23,8 +26,11 @@ export default class UserController {
   public validateLogin = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { authorization } = req.headers;
-      const result = await this.userService.validateLogin(authorization as string);
-      return res.status(mapError('ok')).json({ role: result });
+      const { data } = await this.userService.validateLogin(authorization as string);
+      console.log('controller');
+      const verifyUser = await this.userModel.findOne(data.email);
+      const role = verifyUser?.role;
+      return res.status(mapError('ok')).json({ role });
     } catch (error) {
       next(error);
     }

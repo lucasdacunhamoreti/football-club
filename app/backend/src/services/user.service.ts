@@ -9,7 +9,7 @@ import userSchema from '../validations/schemas/user.schema';
 export default class UserService {
   private userModel: UserModel;
 
-  constructor() {
+  constructor(public jwt = new JwtUtil()) {
     this.userModel = new UserModel();
   }
 
@@ -35,8 +35,7 @@ export default class UserService {
     if (!authorization) {
       throw new HttpException(mapError('unauthorized'), 'Token must be a valid token');
     }
-    const payload = await JwtUtil.verifyToken(authorization);
-    const verifyUser = await this.userModel.findOne(payload.data.email);
-    return verifyUser?.role;
+    const data = await JwtUtil.verifyToken(authorization);
+    return data;
   };
 }
