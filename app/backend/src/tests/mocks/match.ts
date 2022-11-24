@@ -255,3 +255,10 @@ export const newMatchWithTeamsEquals = {
   awayTeam: 16,
   awayTeamGoals: 2,
 }
+
+export const newMatchWithTeamNotExist = {
+  homeTeam: 160,
+  homeTeamGoals: 2,
+  awayTeam: 16,
+  awayTeamGoals: 2,
+}

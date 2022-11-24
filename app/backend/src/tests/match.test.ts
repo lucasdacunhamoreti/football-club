@@ -6,7 +6,7 @@ import chaiHttp = require('chai-http')
 import Sinon = require('sinon')
 import MatchModel from '../database/models/Match';
 import { IMatchComplete } from '../interfaces/IMatch';
-import { matches, matchesInProgress, matchesNotInProgress, insertNewMatch, newMatchReturned, newMatchWithTeamsEquals } from './mocks/match';
+import { matches, matchesInProgress, matchesNotInProgress, insertNewMatch, newMatchReturned, newMatchWithTeamsEquals, newMatchWithTeamNotExist } from './mocks/match';
 import { app } from '../app'; 
 import { StatusCodes as code } from 'http-status-codes';
 
@@ -158,6 +158,23 @@ describe('Integration testing on the /match endpoint', () => {
             
             expect(result.body).to.eql({ message: 'It is not possible to create a match with two equal teams' });
             expect(result).to.have.status(code.UNPROCESSABLE_ENTITY);
+        });
+    });
+
+    describe('Error when insert a new match with a team non-existent', () => {
+        before(() => {
+            Sinon.stub(MatchModel, 'create').resolves();
+        });
+    
+        after(() => {
+            (MatchModel.create as sinon.SinonStub).restore();
+        });
+
+        it('Return error 404 when inserting a match with non-existing time in the table', async () => {
+            const result = await request(app).post('/matches').set('Authorization', token).send(newMatchWithTeamNotExist);
+            
+            expect(result.body).to.eql({ message: 'There is no team with such id!' });
+            expect(result).to.have.status(code.NOT_FOUND);
         });
     });
 });

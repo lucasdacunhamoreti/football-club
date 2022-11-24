@@ -1,13 +1,16 @@
 import MatchModel from '../models/match.model';
+import TeamModel from '../models/team.model';
 import { INewMatch } from '../interfaces/IMatch';
 import HttpException from '../utils/http.exception';
 import mapError from '../utils/mapError';
 
 export default class MatchService {
   private matchModel: MatchModel;
+  private teamModel: TeamModel;
 
   constructor() {
     this.matchModel = new MatchModel();
+    this.teamModel = new TeamModel();
   }
 
   public getAllMatches = async (inProgress: string | undefined) => {
@@ -33,6 +36,12 @@ export default class MatchService {
         'It is not possible to create a match with two equal teams',
       );
     }
+    const existHomeTeam = await this.teamModel.getOneTeam(homeTeam);
+    const existAwayTeam = await this.teamModel.getOneTeam(awayTeam);
+    if (!existHomeTeam || !existAwayTeam) {
+      throw new HttpException(mapError('notFound'), 'There is no team with such id!');
+    }
+
     const matchInserted = await this.matchModel.newMatch(body);
     return matchInserted;
   };

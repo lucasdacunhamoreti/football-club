@@ -33,9 +33,9 @@ export default class UserService {
 
   public validateLogin = async (authorization: string) => {
     if (!authorization) {
-      throw new HttpException(mapError('unauthorized'), 'Token must be a valid token');
+      throw new HttpException(mapError('unauthorized'), 'Token not found');
     }
-    const data = await JwtUtil.verifyToken(authorization);
-    return data;
+    const payload = JwtUtil.verifyToken(authorization);
+    return payload;
   };
 }
