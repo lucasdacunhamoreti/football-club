@@ -1,5 +1,7 @@
 import MatchModel from '../models/match.model';
 import { INewMatch } from '../interfaces/IMatch';
+import HttpException from '../utils/http.exception';
+import mapError from '../utils/mapError';
 
 export default class MatchService {
   private matchModel: MatchModel;
@@ -26,5 +28,12 @@ export default class MatchService {
   public newMatch = async (body: INewMatch) => {
     const matchInserted = await this.matchModel.newMatch(body);
     return matchInserted;
+  };
+
+  public changeStatusMatch = async (id: number) => {
+    const match = await this.matchModel.getOneMatch(id);
+    if (!match) throw new HttpException(mapError('notFound'), 'Match not exist');
+    const matchChanged = await this.matchModel.changeStatusMatch(id);
+    return matchChanged;
   };
 }

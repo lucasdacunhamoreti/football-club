@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import mapError from '../utils/mapError';
 import MatchService from '../services/match.service';
 
@@ -18,5 +18,15 @@ export default class MatchController {
   public newMatch = async (req: Request, res: Response) => {
     const result = await this.matchService.newMatch(req.body);
     return res.status(mapError('created')).json(result);
+  };
+
+  public changeStatusMatch = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const result = await this.matchService.changeStatusMatch(+id);
+      return res.status(mapError('ok')).json(result);
+    } catch (error) {
+      next(error);
+    }
   };
 }

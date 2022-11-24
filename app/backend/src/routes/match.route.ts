@@ -14,4 +14,10 @@ router.post(
   (req, res) => matchController.newMatch(req, res),
 );
 
+router.patch(
+  '/:id/finish',
+  authMiddleware.verifyAccess,
+  (req, res, next) => matchController.changeStatusMatch(req, res, next),
+);
+
 export default router;

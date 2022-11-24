@@ -28,3 +28,7 @@ export interface INewMatch {
   homeTeamGoals: number;
   awayTeamGoals: number;
 }
+
+export interface IMatchFinally {
+  message: string;
+}
