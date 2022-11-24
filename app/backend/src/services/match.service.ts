@@ -26,6 +26,13 @@ export default class MatchService {
   };
 
   public newMatch = async (body: INewMatch) => {
+    const { homeTeam, awayTeam } = body;
+    if (homeTeam === awayTeam) {
+      throw new HttpException(
+        mapError('unprocessable'),
+        'It is not possible to create a match with two equal teams',
+      );
+    }
     const matchInserted = await this.matchModel.newMatch(body);
     return matchInserted;
   };

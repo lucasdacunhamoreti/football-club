@@ -11,7 +11,7 @@ router.get('/', (req, res) => matchController.getAllMatches(req, res));
 router.post(
   '/',
   authMiddleware.verifyAccess,
-  (req, res) => matchController.newMatch(req, res),
+  (req, res, next) => matchController.newMatch(req, res, next),
 );
 
 router.patch(
