@@ -15,6 +15,7 @@ chai.use(chaiHttp);
 const { expect, request } = chai;
 
 describe('Integration testing on the /match endpoint', () => {
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImVtYWlsIjoidXNlckB1c2VyLmNvbSJ9LCJpYXQiOjE2NjkyOTU4MjV9.aH-mXCakA9lMP83O2IlWoSnAtQMNKC5LeSePBAJHBHM';
     describe('List all matches', () => {
         before(() => {
             Sinon.stub(MatchModel, 'findAll').resolves(matches as any); // Arrumar
@@ -102,10 +103,44 @@ describe('Integration testing on the /match endpoint', () => {
         });
 
         it('Insert the match successfully and return code 201', async () => {
-            const result = await request(app).post('/matches').set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImVtYWlsIjoidXNlckB1c2VyLmNvbSJ9LCJpYXQiOjE2NjkyOTU4MjV9.aH-mXCakA9lMP83O2IlWoSnAtQMNKC5LeSePBAJHBHM').send(insertNewMatch);
+            const result = await request(app).post('/matches').set('Authorization', token).send(insertNewMatch);
 
             expect(result.body).to.eql(newMatchReturned);
             expect(result).to.have.status(code.CREATED);
+        });
+    });
+
+    describe('Finish a match successfully', () => {
+        before(() => {
+            Sinon.stub(MatchModel, 'update').resolves();
+        });
+    
+        after(() => {
+            (MatchModel.update as sinon.SinonStub).restore();
+        });
+
+        it('Finish the match successfully and return code 200', async () => {
+            const result = await request(app).patch('/matches/4/finish').set('Authorization', token).send();
+            
+            expect(result.body).to.eql({ message: 'Finished' });
+            expect(result).to.have.status(code.OK);
+        });
+    });
+
+    describe('Finish a non-existent match', () => {
+        before(() => {
+            Sinon.stub(MatchModel, 'update').resolves();
+        });
+    
+        after(() => {
+            (MatchModel.update as sinon.SinonStub).restore();
+        });
+
+        it('Returns error when ending a non-existent match with code 404', async () => {
+            const result = await request(app).patch('/matches/100/finish').set('Authorization', token).send();
+            
+            expect(result.body).to.eql({ message: 'Match not exist' });
+            expect(result).to.have.status(code.NOT_FOUND);
         });
     });
 });
