@@ -88,7 +88,7 @@ describe('Integration testing on the /login endpoint', () => {
         it('Returns the token when the user is invalid', async () => {
             const result = await request(app).get('/login/validate').send();
             
-            expect(result.body).to.eql({ message: 'Token must be a valid token' });
+            expect(result.body).to.eql({ message: 'Token not found' });
             expect(result).to.have.status(code.UNAUTHORIZED);
         });
     });

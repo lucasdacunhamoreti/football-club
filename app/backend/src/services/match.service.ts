@@ -1,6 +1,6 @@
 import MatchModel from '../models/match.model';
 import TeamModel from '../models/team.model';
-import { INewMatch } from '../interfaces/IMatch';
+import { INewMatch, IMatchUpdate } from '../interfaces/IMatch';
 import HttpException from '../utils/http.exception';
 import mapError from '../utils/mapError';
 
@@ -51,5 +51,11 @@ export default class MatchService {
     if (!match) throw new HttpException(mapError('notFound'), 'Match not exist');
     const matchChanged = await this.matchModel.changeStatusMatch(id);
     return matchChanged;
+  };
+
+  public updateMatch = async (id: number, body:IMatchUpdate) => {
+    const match = await this.matchModel.getOneMatch(id);
+    if (!match) throw new HttpException(mapError('notFound'), 'Match not exist');
+    await this.matchModel.updateMatch(id, body);
   };
 }

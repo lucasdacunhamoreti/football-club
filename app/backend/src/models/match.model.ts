@@ -1,4 +1,4 @@
-import { IMatch, INewMatch, IMatchFinally } from '../interfaces/IMatch';
+import { IMatch, INewMatch, IMatchFinally, IMatchUpdate } from '../interfaces/IMatch';
 import MatchesModel from '../database/models/Match';
 import TeamsModel from '../database/models/Team';
 
@@ -73,5 +73,12 @@ export default class MatchModel {
       inProgress: false,
     }, { where: { id } });
     return { message: 'Finished' };
+  }
+
+  public async updateMatch(id: number, body:IMatchUpdate) {
+    await this._model.update({
+      homeTeamGoals: body.homeTeamGoals,
+      awayTeamGoals: body.awayTeamGoals,
+    }, { where: { id } });
   }
 }

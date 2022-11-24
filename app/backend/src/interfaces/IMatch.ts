@@ -32,3 +32,8 @@ export interface INewMatch {
 export interface IMatchFinally {
   message: string;
 }
+
+export interface IMatchUpdate {
+  homeTeamGoals: number;
+  awayTeamGoals: number;
+}

@@ -20,4 +20,10 @@ router.patch(
   (req, res, next) => matchController.changeStatusMatch(req, res, next),
 );
 
+router.patch(
+  '/:id',
+  authMiddleware.verifyAccess,
+  (req, res, next) => matchController.updateMatch(req, res, next),
+);
+
 export default router;
