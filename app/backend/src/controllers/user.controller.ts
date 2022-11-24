@@ -27,7 +27,6 @@ export default class UserController {
     try {
       const { authorization } = req.headers;
       const { data } = await this.userService.validateLogin(authorization as string);
-      console.log('controller');
       const verifyUser = await this.userModel.findOne(data.email);
       const role = verifyUser?.role;
       return res.status(mapError('ok')).json({ role });

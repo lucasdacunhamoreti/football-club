@@ -230,3 +230,21 @@ export const matchesNotInProgress = [
         }
     }
 ]
+
+export const insertNewMatch = {
+  id: 1,
+  homeTeam: 16,
+  homeTeamGoals: 2,
+  awayTeam: 8,
+  awayTeamGoals: 2,
+  inProgress: 1,
+}
+
+export const newMatchReturned = {
+  id: 1,
+  homeTeam: 16,
+  homeTeamGoals: 2,
+  awayTeam: 8,
+  awayTeamGoals: 2,
+  inProgress: 1,
+}
