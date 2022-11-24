@@ -16,7 +16,6 @@ export default class MatchService {
       case 'false':
         matches = await this.matchModel.getAllMatchesByProgress(false);
         break;
-
       default:
         matches = await this.matchModel.getAllMatches();
     }

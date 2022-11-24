@@ -22,8 +22,8 @@ describe('Integration testing on the /team endpoint', () => {
         (TeamModel.findAll as sinon.SinonStub).restore();
     });
 
-    describe('Get all com sucesso', () => {
-        it('Verifica se ao fazer o get all retorna todos os times', async () => {
+    describe('List all teams', () => {
+        it('Checks if all teams with status 200 are returned', async () => {
             const result = await request(app).get('/teams').send();
 
             expect(result.body).to.eql(teams);
@@ -33,7 +33,7 @@ describe('Integration testing on the /team endpoint', () => {
         });
     });
 
-    describe('Get one team com sucesso', () => {
+    describe('List one team with', () => {
         before(() => {
             Sinon.stub(TeamModel, 'findOne').resolves(oneTeam as TeamModel);
         });
@@ -42,7 +42,7 @@ describe('Integration testing on the /team endpoint', () => {
             (TeamModel.findOne as sinon.SinonStub).restore();
         });
 
-        it('Verifica se ao fazer o get one team retorna o time pelo id', async () => {
+        it('Checks if a team with status 200 is returned', async () => {
             const result = await request(app).get('/teams/1').send();
     
             expect(result.body).to.eql(oneTeam);
@@ -50,7 +50,7 @@ describe('Integration testing on the /team endpoint', () => {
         });
     });
 
-    describe('Get one team com falha', () => {
+    describe('List one team with error', () => {
         before(() => {
             Sinon.stub(TeamModel, 'findOne').resolves();
         });
@@ -59,7 +59,7 @@ describe('Integration testing on the /team endpoint', () => {
             (TeamModel.findOne as sinon.SinonStub).restore();
         });
 
-        it('Verifica se ao fazer o get one team em um time que não existe retorna um erro', async () => {
+        it('Checks if an error is returned when fetching a team with non-existent id', async () => {
             const result = await request(app).get('/teams/50').send();
     
             expect(result.body.message).to.eq('Team not exist');
