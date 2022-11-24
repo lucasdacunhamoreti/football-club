@@ -248,3 +248,10 @@ export const newMatchReturned = {
   awayTeamGoals: 2,
   inProgress: 1,
 }
+
+export const newMatchWithTeamsEquals = {
+  homeTeam: 16,
+  homeTeamGoals: 2,
+  awayTeam: 16,
+  awayTeamGoals: 2,
+}
