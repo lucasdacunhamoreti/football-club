@@ -6,7 +6,7 @@ import chaiHttp = require('chai-http')
 import Sinon = require('sinon')
 import MatchModel from '../database/models/Match';
 import { IMatchComplete } from '../interfaces/IMatch';
-import { matches, matchesInProgress, matchesNotInProgress, insertNewMatch, newMatchReturned, newMatchWithTeamsEquals, newMatchWithTeamNotExist } from './mocks/match';
+import { matches, matchesInProgress, matchesNotInProgress, insertNewMatch, newMatchReturned, newMatchWithTeamsEquals, newMatchWithTeamNotExist, matchUpdated } from './mocks/match';
 import { app } from '../app'; 
 import { StatusCodes as code } from 'http-status-codes';
 
@@ -174,6 +174,40 @@ describe('Integration testing on the /match endpoint', () => {
             const result = await request(app).post('/matches').set('Authorization', token).send(newMatchWithTeamNotExist);
             
             expect(result.body).to.eql({ message: 'There is no team with such id!' });
+            expect(result).to.have.status(code.NOT_FOUND);
+        });
+    });
+
+    describe('Update a match with success', () => {
+        before(() => {
+            Sinon.stub(MatchModel, 'update').resolves();
+        });
+    
+        after(() => {
+            (MatchModel.update as sinon.SinonStub).restore();
+        });
+
+        it('Updates a match successfully and returns code 200', async () => {
+            const result = await request(app).patch('/matches/1').set('Authorization', token).send(matchUpdated);
+            
+            expect(result.body).to.eql({ message: 'Match updated!' });
+            expect(result).to.have.status(code.OK);
+        });
+    });
+
+    describe('Error when updating a non-existent match', () => {
+        before(() => {
+            Sinon.stub(MatchModel, 'update').resolves();
+        });
+    
+        after(() => {
+            (MatchModel.update as sinon.SinonStub).restore();
+        });
+
+        it('Returns error with code 404 when updating a match with nonexistent id', async () => {
+            const result = await request(app).patch('/matches/1000').set('Authorization', token).send(matchUpdated);
+            
+            expect(result.body).to.eql({ message: 'Match not exist' });
             expect(result).to.have.status(code.NOT_FOUND);
         });
     });

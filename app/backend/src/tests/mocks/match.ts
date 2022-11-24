@@ -262,3 +262,9 @@ export const newMatchWithTeamNotExist = {
   awayTeam: 16,
   awayTeamGoals: 2,
 }
+
+
+export const matchUpdated = {
+  homeTeamGoals: 3,
+  awayTeamGoals: 2,
+}
