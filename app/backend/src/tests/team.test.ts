@@ -14,15 +14,15 @@ chai.use(chaiHttp);
 const { expect, request } = chai;
 
 describe('Integration testing on the /team endpoint', () => {
-    before(() => {
-        Sinon.stub(TeamModel, 'findAll').resolves(teams as TeamModel[]);
-    });
-
-    after(() => {
-        (TeamModel.findAll as sinon.SinonStub).restore();
-    });
-
     describe('List all teams', () => {
+        before(() => {
+            Sinon.stub(TeamModel, 'findAll').resolves(teams as TeamModel[]);
+        });
+    
+        after(() => {
+            (TeamModel.findAll as sinon.SinonStub).restore();
+        });
+        
         it('Checks if all teams with status 200 are returned', async () => {
             const result = await request(app).get('/teams').send();
 
