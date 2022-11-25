@@ -13,4 +13,9 @@ export default class LeaderboardController {
     const result = await this.leaderboardService.getPlacingTeamHome();
     return res.status(mapError('ok')).json(result);
   };
+
+  public getPlacingTeamAway = async (_req: Request, res: Response) => {
+    const result = await this.leaderboardService.getPlacingTeamAway();
+    return res.status(mapError('ok')).json(result);
+  };
 }
