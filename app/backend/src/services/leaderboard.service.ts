@@ -26,6 +26,17 @@ export default class LeaderboardService {
     return finalPlacing;
   };
 
+  public getAllPlacing = async () => {
+    const allGames = await this.matchModel.getAllMatchesByProgress(false);
+    const teamHomeGames = LeaderboardService.generateGamesTeamHome(allGames as IMatchComplete[]);
+    const teamAwayGames = LeaderboardService.generateGamesTeamAway(allGames as IMatchComplete[]);
+
+    const accumulatedGames = LeaderboardService
+      .accumulateGames([...teamHomeGames, ...teamAwayGames] as ILeaderboard[]);
+    const finalPlacing = LeaderboardService.calculateBalanceAndEfficiency(accumulatedGames);
+    return finalPlacing;
+  };
+
   static calculateBalanceAndEfficiency(games: ILeaderboard[]) {
     const balanceAndEfficiency = games.map((game) => ({
       ...game,

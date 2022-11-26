@@ -8,4 +8,6 @@ router.get('/home', (req, res) => leaderboardController.getPlacingTeamHome(req, 
 
 router.get('/away', (req, res) => leaderboardController.getPlacingTeamAway(req, res));
 
+router.get('/', (req, res) => leaderboardController.getAllPlacing(req, res));
+
 export default router;
