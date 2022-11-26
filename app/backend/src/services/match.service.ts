@@ -1,6 +1,6 @@
 import MatchModel from '../models/match.model';
 import TeamModel from '../models/team.model';
-import { INewMatch, IMatchUpdate } from '../interfaces/IMatch';
+import { ITeams, IMatchUpdate } from '../interfaces/IMatch';
 import HttpException from '../utils/http.exception';
 import mapError from '../utils/mapError';
 
@@ -28,7 +28,7 @@ export default class MatchService {
     return matches;
   };
 
-  public newMatch = async (body: INewMatch) => {
+  public newMatch = async (body: ITeams) => {
     const { homeTeam, awayTeam } = body;
     if (homeTeam === awayTeam) {
       throw new HttpException(

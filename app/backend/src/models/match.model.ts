@@ -1,4 +1,4 @@
-import { IMatch, INewMatch, IMatchFinally, IMatchUpdate } from '../interfaces/IMatch';
+import { IMatch, ITeams, IMatchFinally, IMatchUpdate } from '../interfaces/IMatch';
 import MatchesModel from '../database/models/Match';
 import TeamsModel from '../database/models/Team';
 
@@ -57,7 +57,7 @@ export default class MatchModel {
     return result;
   }
 
-  public async newMatch(body: INewMatch): Promise<IMatch> {
+  public async newMatch(body: ITeams): Promise<IMatch> {
     const result = await this._model.create({
       homeTeam: body.homeTeam,
       awayTeam: body.awayTeam,
