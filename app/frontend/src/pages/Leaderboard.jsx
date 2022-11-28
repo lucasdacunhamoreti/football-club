@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 import Header from '../components/Header';
 import LeaderboardTable from '../components/LeaderboardTable';
 import LoginBtn from '../components/LoginBtn';
@@ -15,8 +16,16 @@ const Leaderboard = () => {
     setLogin(!!token);
   }, [logged, setLogin]);
 
+  function isTokenExpired() {
+    const token = localStorage.getItem('token');
+    const expiry = (JSON.parse(atob(token.split('.')[1]))).exp;
+    console.log('testando token');
+    return (Math.floor((new Date()).getTime() / 1000)) >= expiry;
+  }
+
   return (
     <>
+    { isTokenExpired() && <Navigate to='/login' /> }
       <Header
         page="CLASSIFICAÇÃO"
         FirstNavigationLink={ MatchesBtn }

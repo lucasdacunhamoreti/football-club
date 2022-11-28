@@ -1,5 +1,5 @@
 import HttpException from '../utils/http.exception';
-import mapError from '../utils/mapError';
+import StatusCode from '../utils/StatusCode';
 import TeamModel from '../models/team.model';
 
 export default class TeamService {
@@ -16,7 +16,7 @@ export default class TeamService {
 
   public getOneTeam = async (id: number) => {
     const team = await this.teamModel.getOneTeam(id);
-    if (!team) throw new HttpException(mapError('notFound'), 'Team not exist');
+    if (!team) throw new HttpException(StatusCode.NOT_FOUND, 'Team not exist');
     return team;
   };
 }

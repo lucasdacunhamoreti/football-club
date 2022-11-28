@@ -1,5 +1,5 @@
 import { compareSync } from 'bcryptjs';
-import mapError from '../utils/mapError';
+import StatusCode from '../utils/StatusCode';
 import JwtUtil from '../utils/jwt.util';
 import HttpException from '../utils/http.exception';
 import { IUserLogin } from '../interfaces/IUser';
@@ -15,16 +15,16 @@ export default class UserService {
 
   public login = async (user: IUserLogin) => {
     const { error } = userSchema.validate(user);
-    if (error) throw new HttpException(mapError('badRequest'), 'All fields must be filled');
+    if (error) throw new HttpException(StatusCode.BAD_REQUEST, 'All fields must be filled');
 
     const verifyUser = await this.userModel.findOne(user.email);
     if (!verifyUser) {
-      throw new HttpException(mapError('unauthorized'), 'Incorrect email or password');
+      throw new HttpException(StatusCode.UNAUTHORIZED, 'Incorrect email or password');
     }
 
     const validatedPassword = compareSync(user.password, verifyUser.password);
     if (!validatedPassword) {
-      throw new HttpException(mapError('unauthorized'), 'Incorrect email or password');
+      throw new HttpException(StatusCode.UNAUTHORIZED, 'Incorrect email or password');
     }
 
     const token = JwtUtil.generateToken(user);
@@ -33,7 +33,7 @@ export default class UserService {
 
   public validateLogin = async (authorization: string) => {
     if (!authorization) {
-      throw new HttpException(mapError('unauthorized'), 'Token not found');
+      throw new HttpException(StatusCode.UNAUTHORIZED, 'Token not found');
     }
     const payload = JwtUtil.verifyToken(authorization);
     return payload;

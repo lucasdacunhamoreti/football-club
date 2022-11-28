@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import mapError from '../utils/mapError';
+import StatusCode from '../utils/StatusCode';
 import LeaderboardService from '../services/leaderboard.service';
 
 export default class LeaderboardController {
@@ -11,17 +11,17 @@ export default class LeaderboardController {
 
   public getPlacingTeamHome = async (_req: Request, res: Response) => {
     const result = await this.leaderboardService.getPlacingTeamHome();
-    return res.status(mapError('ok')).json(result);
+    return res.status(StatusCode.OK).json(result);
   };
 
   public getPlacingTeamAway = async (_req: Request, res: Response) => {
     const result = await this.leaderboardService.getPlacingTeamAway();
-    return res.status(mapError('ok')).json(result);
+    return res.status(StatusCode.OK).json(result);
   };
 
   public getAllPlacing = async (_req: Request, res: Response) => {
     const result = await this.leaderboardService.getAllPlacing();
 
-    return res.status(mapError('ok')).json(result);
+    return res.status(StatusCode.OK).json(result);
   };
 }

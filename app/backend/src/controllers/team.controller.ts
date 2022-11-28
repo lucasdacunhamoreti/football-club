@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import mapError from '../utils/mapError';
+import StatusCode from '../utils/StatusCode';
 import TeamService from '../services/team.service';
 
 export default class TeamController {
@@ -11,14 +11,14 @@ export default class TeamController {
 
   public getAllTeams = async (_req: Request, res: Response) => {
     const result = await this.teamService.getAllTeams();
-    return res.status(mapError('ok')).json(result);
+    return res.status(StatusCode.OK).json(result);
   };
 
   public getOneTeam = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
       const result = await this.teamService.getOneTeam(+id);
-      return res.status(mapError('ok')).json(result);
+      return res.status(StatusCode.OK).json(result);
     } catch (error) {
       next(error);
     }

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import mapError from '../utils/mapError';
+import StatusCode from '../utils/StatusCode';
 import { IUserLogin } from '../interfaces/IUser';
 import UserService from '../services/user.service';
 import UserModel from '../models/user.model';
@@ -17,7 +17,7 @@ export default class UserController {
     try {
       const user: IUserLogin = req.body;
       const result = await this.userService.login(user);
-      return res.status(mapError('ok')).json({ token: result });
+      return res.status(StatusCode.OK).json({ token: result });
     } catch (error) {
       next(error);
     }
@@ -29,7 +29,7 @@ export default class UserController {
       const { data } = await this.userService.validateLogin(authorization as string);
       const verifyUser = await this.userModel.findOne(data.email);
       const role = verifyUser?.role;
-      return res.status(mapError('ok')).json({ role });
+      return res.status(StatusCode.OK).json({ role });
     } catch (error) {
       next(error);
     }
