@@ -80,7 +80,6 @@ describe('Integration testing on the /leaderboard endpoint', () => {
 
         it('Returns code 200 and a list of scores', async () => {
             const result = await request(app).get('/leaderboard').send();
-            console.log(result.body);
             
             expect(result.body).to.eql(placingAllTeam);
             expect(result).to.have.status(code.OK);

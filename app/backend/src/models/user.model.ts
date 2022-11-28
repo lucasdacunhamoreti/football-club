@@ -8,7 +8,7 @@ export default class UserModel {
     this._model = User;
   }
 
-  public async findOne(email: string): Promise<IUser | null> {
+  public async getUser(email: string): Promise<IUser | null> {
     const result = await this._model.findOne({ where: { email } });
     return result;
   }

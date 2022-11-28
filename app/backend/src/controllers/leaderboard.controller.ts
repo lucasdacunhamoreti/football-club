@@ -21,7 +21,6 @@ export default class LeaderboardController {
 
   public getAllPlacing = async (_req: Request, res: Response) => {
     const result = await this.leaderboardService.getAllPlacing();
-
     return res.status(StatusCode.OK).json(result);
   };
 }

@@ -13,11 +13,17 @@ export default class UserService {
     this.userModel = new UserModel();
   }
 
+  public getUser = async (email: string) => {
+    const user = await this.userModel.getUser(email);
+    if (!user) throw new HttpException(StatusCode.NOT_FOUND, 'User not found');
+    return user;
+  };
+
   public login = async (user: IUserLogin) => {
     const { error } = userSchema.validate(user);
     if (error) throw new HttpException(StatusCode.BAD_REQUEST, 'All fields must be filled');
 
-    const verifyUser = await this.userModel.findOne(user.email);
+    const verifyUser = await this.getUser(user.email);
     if (!verifyUser) {
       throw new HttpException(StatusCode.UNAUTHORIZED, 'Incorrect email or password');
     }
