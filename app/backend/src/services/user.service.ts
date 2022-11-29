@@ -17,7 +17,6 @@ export default class UserService {
 
   public getUser = async (email: string) => {
     const user = await this.userModel.getUser(email);
-    if (!user) throw new HttpException(StatusCode.UNAUTHORIZED, this.messageLoginFail);
     return user;
   };
 
