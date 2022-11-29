@@ -8,29 +8,31 @@ import userSchema from '../validations/schemas/user.schema';
 
 export default class UserService {
   private userModel: UserModel;
+  private messageLoginFail: string;
 
   constructor(public jwt = new JwtUtil()) {
     this.userModel = new UserModel();
+    this.messageLoginFail = 'Incorrect email or password';
   }
 
   public getUser = async (email: string) => {
     const user = await this.userModel.getUser(email);
-    if (!user) throw new HttpException(StatusCode.NOT_FOUND, 'User not found');
+    if (!user) throw new HttpException(StatusCode.UNAUTHORIZED, this.messageLoginFail);
     return user;
   };
 
   public login = async (user: IUserLogin) => {
     const { error } = userSchema.validate(user);
-    if (error) throw new HttpException(StatusCode.BAD_REQUEST, 'All fields must be filled');
+    if (error) throw new HttpException(StatusCode.BAD_REQUEST, this.messageLoginFail);
 
     const verifyUser = await this.getUser(user.email);
     if (!verifyUser) {
-      throw new HttpException(StatusCode.UNAUTHORIZED, 'Incorrect email or password');
+      throw new HttpException(StatusCode.UNAUTHORIZED, this.messageLoginFail);
     }
 
     const validatedPassword = compareSync(user.password, verifyUser.password);
     if (!validatedPassword) {
-      throw new HttpException(StatusCode.UNAUTHORIZED, 'Incorrect email or password');
+      throw new HttpException(StatusCode.UNAUTHORIZED, this.messageLoginFail);
     }
 
     const token = JwtUtil.generateToken(user);
