@@ -10,26 +10,20 @@ export default class LeaderboardService {
     this.matchModel = new MatchModel();
   }
 
-  public getPlacingTeamHome = async () => {
+  public getPlacing = async (teamPrimary: 'teamHome' | 'teamAway') => {
     const allGames = await this.matchModel.getAllMatchesByProgress(false);
-    const teamHomeGames = LeaderboardService.generateGamesTeamHome(allGames as IMatchComplete[]);
-    const accumulatedGames = LeaderboardService.accumulateGames(teamHomeGames);
-    const finalPlacing = LeaderboardService.calculateBalanceAndEfficiency(accumulatedGames);
-    return finalPlacing;
-  };
-
-  public getPlacingTeamAway = async () => {
-    const allGames = await this.matchModel.getAllMatchesByProgress(false);
-    const teamAwayGames = LeaderboardService.generateGamesTeamAway(allGames as IMatchComplete[]);
-    const accumulatedGames = LeaderboardService.accumulateGames(teamAwayGames);
+    const teamGames = LeaderboardService.generateGames(allGames as IMatchComplete[], teamPrimary);
+    const accumulatedGames = LeaderboardService.accumulateGames(teamGames);
     const finalPlacing = LeaderboardService.calculateBalanceAndEfficiency(accumulatedGames);
     return finalPlacing;
   };
 
   public getAllPlacing = async () => {
     const allGames = await this.matchModel.getAllMatchesByProgress(false);
-    const teamHomeGames = LeaderboardService.generateGamesTeamHome(allGames as IMatchComplete[]);
-    const teamAwayGames = LeaderboardService.generateGamesTeamAway(allGames as IMatchComplete[]);
+    const teamHomeGames = LeaderboardService
+      .generateGames(allGames as IMatchComplete[], 'teamHome');
+    const teamAwayGames = LeaderboardService
+      .generateGames(allGames as IMatchComplete[], 'teamAway');
 
     const accumulatedGames = LeaderboardService
       .accumulateGames([...teamHomeGames, ...teamAwayGames] as ILeaderboard[]);
@@ -57,40 +51,23 @@ export default class LeaderboardService {
     return gamesOrdened;
   }
 
-  static generateGamesTeamHome(games: IMatchComplete[]) {
+  static generateGames(games: IMatchComplete[], teamPrimary: 'teamHome' | 'teamAway') {
     return games.map((match) => {
+      const primary = teamPrimary === 'teamHome' ? 'homeTeamGoals' : 'awayTeamGoals';
+      const secondary = teamPrimary === 'teamHome' ? 'awayTeamGoals' : 'homeTeamGoals';
       let score = { point: 0, tye: 0, loss: 0, win: 0 };
-      if (match.homeTeamGoals === match.awayTeamGoals) score = { ...score, point: 1, tye: 1 };
-      if (match.homeTeamGoals > match.awayTeamGoals) score = { ...score, point: 3, win: 1 };
-      if (match.homeTeamGoals < match.awayTeamGoals) score = { ...score, loss: 1 };
+      if (match[primary] === match[secondary]) score = { ...score, point: 1, tye: 1 };
+      if (match[primary] > match[secondary]) score = { ...score, point: 3, win: 1 };
+      if (match[primary] < match[secondary]) score = { ...score, loss: 1 };
 
       return {
-        name: match.teamHome.teamName,
+        name: match[teamPrimary].teamName,
         totalPoints: score.point,
         totalVictories: score.win,
         totalDraws: score.tye,
         totalLosses: score.loss,
-        goalsFavor: match.homeTeamGoals,
-        goalsOwn: match.awayTeamGoals,
-      } as ILeaderboard;
-    });
-  }
-
-  static generateGamesTeamAway(games: IMatchComplete[]) {
-    return games.map((match) => {
-      let score = { point: 0, tye: 0, loss: 0, win: 0 };
-      if (match.awayTeamGoals === match.homeTeamGoals) score = { ...score, point: 1, tye: 1 };
-      if (match.awayTeamGoals > match.homeTeamGoals) score = { ...score, point: 3, win: 1 };
-      if (match.awayTeamGoals < match.homeTeamGoals) score = { ...score, loss: 1 };
-
-      return {
-        name: match.teamAway.teamName,
-        totalPoints: score.point,
-        totalVictories: score.win,
-        totalDraws: score.tye,
-        totalLosses: score.loss,
-        goalsFavor: match.awayTeamGoals,
-        goalsOwn: match.homeTeamGoals,
+        goalsFavor: match[primary],
+        goalsOwn: match[secondary],
       } as ILeaderboard;
     });
   }

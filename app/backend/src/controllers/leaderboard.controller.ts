@@ -10,12 +10,12 @@ export default class LeaderboardController {
   }
 
   public getPlacingTeamHome = async (_req: Request, res: Response) => {
-    const result = await this.leaderboardService.getPlacingTeamHome();
+    const result = await this.leaderboardService.getPlacing('teamHome');
     return res.status(StatusCode.OK).json(result);
   };
 
   public getPlacingTeamAway = async (_req: Request, res: Response) => {
-    const result = await this.leaderboardService.getPlacingTeamAway();
+    const result = await this.leaderboardService.getPlacing('teamAway');
     return res.status(StatusCode.OK).json(result);
   };
 

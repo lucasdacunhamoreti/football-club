@@ -8,33 +8,34 @@ import userSchema from '../validations/schemas/user.schema';
 
 export default class UserService {
   private userModel: UserModel;
-  private messageLoginFail: string;
+  private errorCredentials: string;
 
   constructor(public jwt = new JwtUtil()) {
     this.userModel = new UserModel();
-    this.messageLoginFail = 'Incorrect email or password';
+    this.errorCredentials = 'Incorrect email or password';
   }
 
-  public getUser = async (data: IUserLogin) => {
-    const user = await this.userModel.getUser(data.email);
+  public getUser = async (email: string) => {
+    const user = await this.userModel.getUser(email);
     return user;
   };
 
-  public login = async (user: IUserLogin) => {
-    const { error } = userSchema.validate(user);
+  public login = async (credentials: IUserLogin) => {
+    const { email, password } = credentials;
+    const { error } = userSchema.validate(credentials);
     if (error) throw new HttpException(StatusCode.BAD_REQUEST, error.message);
 
-    const verifyUser = await this.userModel.getUser(user.email);
-    if (!verifyUser) {
-      throw new HttpException(StatusCode.UNAUTHORIZED, this.messageLoginFail);
+    const user = await this.userModel.getUser(email);
+    if (!user) {
+      throw new HttpException(StatusCode.UNAUTHORIZED, this.errorCredentials);
     }
 
-    const validatedPassword = compareSync(user.password, verifyUser.password);
+    const validatedPassword = compareSync(password, user.password);
     if (!validatedPassword) {
-      throw new HttpException(StatusCode.UNAUTHORIZED, this.messageLoginFail);
+      throw new HttpException(StatusCode.UNAUTHORIZED, this.errorCredentials);
     }
 
-    const token = JwtUtil.generateToken(user);
+    const token = JwtUtil.generateToken(credentials);
     return token;
   };
 

@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import StatusCode from '../utils/StatusCode';
-import { IUserLogin } from '../interfaces/IUser';
 import UserService from '../services/user.service';
 
 export default class UserController {
@@ -12,9 +11,9 @@ export default class UserController {
 
   public login = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const user: IUserLogin = req.body;
-      const result = await this.userService.login(user);
-      return res.status(StatusCode.OK).json({ token: result });
+      const credentials = req.body;
+      const token = await this.userService.login(credentials);
+      return res.status(StatusCode.OK).json({ token });
     } catch (error) {
       next(error);
     }
@@ -24,8 +23,8 @@ export default class UserController {
     try {
       const { authorization } = req.headers;
       const { data } = await this.userService.validateLogin(authorization as string);
-      const verifyUser = await this.userService.getUser(data);
-      const role = verifyUser?.role;
+      const user = await this.userService.getUser(data.email);
+      const role = user?.role;
       return res.status(StatusCode.OK).json({ role });
     } catch (error) {
       next(error);
