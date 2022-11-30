@@ -15,16 +15,16 @@ export default class UserService {
     this.messageLoginFail = 'Incorrect email or password';
   }
 
-  public getUser = async (email: string) => {
-    const user = await this.userModel.getUser(email);
+  public getUser = async (data: IUserLogin) => {
+    const user = await this.userModel.getUser(data.email);
     return user;
   };
 
   public login = async (user: IUserLogin) => {
     const { error } = userSchema.validate(user);
-    if (error) throw new HttpException(StatusCode.BAD_REQUEST, this.messageLoginFail);
+    if (error) throw new HttpException(StatusCode.BAD_REQUEST, error.message);
 
-    const verifyUser = await this.getUser(user.email);
+    const verifyUser = await this.userModel.getUser(user.email);
     if (!verifyUser) {
       throw new HttpException(StatusCode.UNAUTHORIZED, this.messageLoginFail);
     }
